@@ -1,0 +1,53 @@
+// Function to calculate the determinant of a matrix
+int determinantOfMatrix(vector<vector<int> > matrix, int n)
+{
+    // Base case: if the matrix is 1x1, return the single element
+    if(n == 1)
+    {
+        return matrix[0][0];
+    }
+    
+    // Variable to accumulate the result (the determinant)
+    int ans = 0;
+    
+    // This will store the minor matrix (n-1 x n-1) for recursive calculation
+    vector<vector<int>> mat(n-1, vector<int>(n-1));
+    
+    // Loop through each element in the first row to perform cofactor expansion
+    for(int i = 0; i < n; i++)
+    {
+        // Take the element from the first row and i-th column
+        int temp = matrix[0][i];
+        
+        // Alternate the sign based on the position (i) (cofactor expansion)
+        if(i % 2 == 1)
+        {
+            temp *= -1; // If i is odd, multiply by -1
+        }
+        
+        // Construct the minor matrix by removing the first row and i-th column
+        // j starts from 1 to skip the first row (row 0)
+        for(int j = 1; j < n; j++)
+        {
+            int colIdx = 0; // Column index for the minor matrix
+            // Loop through all columns of the current row
+            for(int k = 0; k < n; k++)
+            {
+                // Exclude the i-th column to form the minor matrix
+                if(k != i)
+                {
+                    // Add the element to the current row (j-1) and column (colIdx) of the minor matrix
+                    mat[j - 1][colIdx] = matrix[j][k];
+                    colIdx++; // Move to the next column in the minor matrix
+                }
+            }
+        }
+        
+        // Recursively calculate the determinant of the minor matrix
+        // Add the result to the accumulator (ans) with the current element's cofactor
+        ans += temp * determinantOfMatrix(mat, n-1);
+    }
+    
+    // Return the final calculated determinant
+    return ans;
+}
